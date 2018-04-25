@@ -1,6 +1,6 @@
 # sssh
 用于debian9的shadowsocks番茄脚本
-
+其他的基于debian的发行版或者debian旧版本待测试，非基于debian的发行版暂时不可用
 
 - 用法
 
