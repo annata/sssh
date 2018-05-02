@@ -4,7 +4,8 @@
 
 - 开始
 ```
-https://github.com/annata/sssh.git
+apt install git
+git clone https://github.com/annata/sssh.git
 cd sssh
 chmod 755 ss.sh
 ./ss.sh create 123.123.123.123 9001 aes-256-cfb sdhywfygb324234b  #只是示例自行修改成自己的ss服务器
