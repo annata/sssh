@@ -29,8 +29,13 @@ ssredir(){
 chinadns(){
 	if [ ! -e /root/.sscnf/chinadns-1.3.2/src/chinadns ]
 	then
+		if [ ! -e $DIR/chinadns-1.3.2.tar.gz ]
+		then
+			wget -O /root/.sscnf/chinadns-1.3.2.tar.gz --no-check-certificate https://github.com/shadowsocks/ChinaDNS/releases/download/1.3.2/chinadns-1.3.2.tar.gz
+		else
+			cp -f $DIR/chinadns-1.3.2.tar.gz /root/.sscnf/chinadns-1.3.2.tar.gz
+		fi
 		cd /root/.sscnf
-		wget --no-check-certificate https://github.com/shadowsocks/ChinaDNS/releases/download/1.3.2/chinadns-1.3.2.tar.gz
 		tar zxvf chinadns-1.3.2.tar.gz
 		cd chinadns-1.3.2
 		./configure
@@ -146,6 +151,7 @@ then
 	port="$3"
 	method="$4"
 	pass="$5"
+	DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 	create
 else 
 	if [ "$1" == "remove" ] 
