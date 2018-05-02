@@ -1,6 +1,14 @@
 # sssh
-用于debian9的shadowsocks番茄脚本
+用于debian9的shadowsocks翻墙脚本
 其他的基于debian的发行版或者debian旧版本待测试，非基于debian的发行版暂时不可用
+
+- 开始
+```
+https://github.com/annata/sssh.git
+cd sssh
+chmod 755 ss.sh
+./ss.sh create 123.123.123.123 9001 aes-256-cfb sdhywfygb324234b  #只是示例自行修改成自己的ss服务器
+```
 
 - 用法
 
