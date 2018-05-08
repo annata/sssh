@@ -5,7 +5,7 @@ ubuntu16.04LTS，ubuntu18.04LTS已经测试可用
 
 - 开始
 ```
-apt install git
+apt install -y git
 git clone https://github.com/annata/sssh.git
 cd sssh
 chmod 755 ss.sh

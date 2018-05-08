@@ -145,6 +145,7 @@ then
 	echo '必须是root权限'
 	exit 1
 fi
+source /etc/os-release
 case $ID in
 debian|ubuntu|devuan)
     echo $ID
@@ -158,7 +159,6 @@ centos|fedora|rhel)
     exit 1
     ;;
 esac
-source /etc/os-release
 if [ "$1" == "create" ]
 then
 	ip="$2"
