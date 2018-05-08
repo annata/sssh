@@ -1,6 +1,7 @@
 # sssh
 用于debian9的shadowsocks翻墙脚本
 其他的基于debian的发行版或者debian旧版本待测试，非基于debian的发行版暂时不可用
+ubuntu16.04LTS，ubuntu18.04LTS已经测试可用
 
 - 开始
 ```
@@ -34,6 +35,7 @@ ss.sh remove
 2.使用ss.sh create由于某些原因安装失败以后（例如端口被占用，输入的参数错误等等），可能会导致网络无法连接，再次运行ss.sh create时由于网络无法连接无法安装成功，此时可以先运行ss.sh remove复原所有更改，再次运行ss.sh create即可
 3.ss.sh create相同参数下具有幂等性，可以多次运行ss.sh create
 4.ss.sh create运行成功后启动的进程和代理在重启以后不会自动重启，请自行将ss.sh带上参数放入启动脚本里
+5.ubuntu由于systemd-resolved会占用udp 53端口，所以本脚本会停止systemd-resolved服务，如果你不知道systemd-resolved是什么，可以无视
 ```
 
 

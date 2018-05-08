@@ -83,6 +83,7 @@ createipsetandiptables(){
 	iptables -t nat -A shadowsocks -p tcp -j REDIRECT --to-ports 1090
 
 	iptables -t nat -A OUTPUT -p tcp -j shadowsocks
+	echo '创建iptables规则成功！'
 }
 create(){
 	if [[ -z $ip || -z $port || -z $method || -z $pass ]]
@@ -90,6 +91,7 @@ create(){
 		usage
 		exit 1
 	fi
+	service systemd-resolved stop || true
 	apt install -y wget curl make gcc ipset shadowsocks-libev || true
 	service shadowsocks-libev stop || true
 	systemctl disable shadowsocks-libev.service || true
@@ -104,7 +106,6 @@ create(){
 	chinadns
 	updateresolv
 	createipsetandiptables
-	echo '创建iptables规则成功！'
 
 	echo '翻墙成功！'
 }
@@ -144,7 +145,20 @@ then
 	echo '必须是root权限'
 	exit 1
 fi
-
+case $ID in
+debian|ubuntu|devuan)
+    echo $ID
+	;;
+centos|fedora|rhel)
+    echo '不支持该发行版'
+    exit 1
+	;;
+*)
+	echo '不支持该发行版'
+    exit 1
+    ;;
+esac
+source /etc/os-release
 if [ "$1" == "create" ]
 then
 	ip="$2"
