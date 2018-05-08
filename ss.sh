@@ -92,7 +92,13 @@ create(){
 		exit 1
 	fi
 	service systemd-resolved stop || true
-	apt install -y wget curl make gcc ipset shadowsocks-libev || true
+	apt install -y wget curl make gcc ipset
+	if [[ "$ID" == "ubuntu" ]]
+	then
+		apt-get install software-properties-common -y
+		add-apt-repository ppa:max-c-lv/shadowsocks-libev -y || true
+	fi
+	apt install -y shadowsocks-libev
 	service shadowsocks-libev stop || true
 	systemctl disable shadowsocks-libev.service || true
 	echo -e "{\"server\":\"$ip\",\"server_port\":$port,\"local_port\":1080,\"password\":\"$pass\",\"timeout\":60,\"method\":\"$method\"}" > /etc/shadowsocks-libev/udp.json
