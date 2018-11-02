@@ -3,6 +3,9 @@
 其他的基于debian的发行版或者debian旧版本待测试，非基于debian的发行版暂时不可用
 ubuntu16.04LTS，ubuntu18.04LTS已经测试可用
 
+update 2018/11/02
+增加对centos 7 的支持，fedora 与 centos 6 未做测试。
+
 - 开始
 ```
 apt install -y git
@@ -36,6 +39,7 @@ ss.sh remove
 3.ss.sh create相同参数下具有幂等性，可以多次运行ss.sh create
 4.ss.sh create运行成功后启动的进程和代理在重启以后不会自动重启，请自行将ss.sh带上参数放入启动脚本里
 5.ubuntu由于systemd-resolved会占用udp 53端口，所以本脚本会停止systemd-resolved服务，如果你不知道systemd-resolved是什么，可以无视
+6.本脚本将会修改 /etc/resolv.conf 中的内容，可能会影响相关依赖的服务（例：kubernetes中的 coredns 服务会不断重启）
 ```
 
 
