@@ -53,6 +53,7 @@ chinadns(){
 	nohup /root/.sscnf/chinadns-1.3.2/src/chinadns -m -c chnroute.txt -s 223.5.5.5,127.0.0.1:1080 &
 	echo '启动chinadns成功！'
 }
+# may lead coredns crash when it using hosts' setting. 
 updateresolv(){
 	if [ ! -e /etc/resolv.conf.ss.bak ]
 	then
@@ -91,14 +92,17 @@ create(){
 		usage
 		exit 1
 	fi
-	service systemd-resolved stop || true
-	apt install -y wget curl make gcc ipset
-	if [[ "$ID" == "ubuntu" ]]
+	
+	if [ "$ID" == "ubuntu" ] || [ "$ID" == "debian" ]
 	then
-		apt-get install software-properties-common -y
-		add-apt-repository ppa:max-c-lv/shadowsocks-libev -y || true
+		ubuntuinstall
 	fi
-	apt install -y shadowsocks-libev
+	
+	if [ "$ID" == "centos" ]
+	then
+		centosinstall
+	fi
+
 	service shadowsocks-libev stop || true
 	systemctl disable shadowsocks-libev.service || true
 	echo -e "{\"server\":\"$ip\",\"server_port\":$port,\"local_port\":1080,\"password\":\"$pass\",\"timeout\":60,\"method\":\"$method\"}" > /etc/shadowsocks-libev/udp.json
@@ -114,6 +118,21 @@ create(){
 	createipsetandiptables
 
 	echo '翻墙成功！'
+}
+
+ubuntuinstall(){
+	service systemd-resolved stop || true
+	apt install -y wget curl make gcc ipset
+	apt-get install software-properties-common -y
+	add-apt-repository ppa:max-c-lv/shadowsocks-libev -y || true
+	apt install -y shadowsocks-libev
+	
+}
+centosinstall(){
+	yum install -y wget epel-release
+	wget https://copr.fedorainfracloud.org/coprs/librehat/shadowsocks/repo/epel-7/librehat-shadowsocks-epel-7.repo -O /etc/yum.repos.d/librehat-shadowsocks-epel-7.repo
+	yum install -y shadowsocks-libev
+
 }
 remove(){
 	iptables -t nat -D OUTPUT -p tcp -j shadowsocks || true
@@ -142,10 +161,28 @@ remove(){
 		kill $sstunnelpid
 	fi
 	rm -rf /root/.sscnf || true
-	apt remove -y shadowsocks-libev
-	apt autoremove -y
+	
+	if [ "$ID" == "ubuntu" ] || [ "$ID" == "debian" ]
+	then
+		ubunturemove
+	fi
+	
+	if [[ "$ID" == "centos" ]]
+	then
+		centosremove
+	fi
+
 	echo '取消翻墙，复原所有更改成功！'
 }
+ubunturemove(){
+	apt remove -y shadowsocks-libev
+	apt autoremove -y
+}
+centosremove(){
+	yum remove -y shadowsocks-libev
+	yum autoremove -y
+}
+
 if [ `id -u` != "0" ]
 then
 	echo '必须是root权限'
@@ -153,10 +190,10 @@ then
 fi
 source /etc/os-release
 case $ID in
-debian|ubuntu|devuan)
+debian|ubuntu|devuan|centos)
     echo $ID
 	;;
-centos|fedora|rhel)
+fedora|rhel)
     echo '不支持该发行版'
     exit 1
 	;;
